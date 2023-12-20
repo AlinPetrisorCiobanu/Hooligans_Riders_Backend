@@ -13,12 +13,18 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
-            $table->rememberToken();
-            $table->timestamps();
+            $table->string('name')->require();
+            $table->string('last_name')->require();
+            $table->string('date')->require();
+            $table->string('phone')->unique()->require();
+            $table->string('email')->unique()->require();
+            $table->string('nickname')->unique();
+            $table->string('password')->require();
+            $table->enum('role', ['user','rider','admin','super_admin'])->default('user');
+            $table->boolean('is_active')->default(true);
+            $table->boolean('confirmed')->default(false);
+            $table->timestamp("created_at")->useCurrent();
+            $table->timestamp("updated_at")->useCurrent()->useCurrentOnUpdate();
         });
     }
 
