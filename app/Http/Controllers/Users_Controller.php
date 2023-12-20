@@ -12,7 +12,7 @@ use function Laravel\Prompts\error;
 
 class Users_Controller extends Controller
 {
-    public function list_users(Request $request)
+    public function list_users()
     {
         try {
             if(auth()->user()->is_active === 0){
@@ -154,7 +154,7 @@ class Users_Controller extends Controller
         }
     }
 
-    public function delete_user(Request $request)
+    public function delete_user()
     {
         try {
             if(auth()->user()->is_active === 0){

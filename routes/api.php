@@ -20,4 +20,5 @@ Route::middleware('auth:sanctum')->group(function () {
 //Events
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/events', [Events_Controller::class, 'list_events']);
+    Route::post('/events', [Events_Controller::class, 'new_event'])->middleware('isNotUser');
 });
