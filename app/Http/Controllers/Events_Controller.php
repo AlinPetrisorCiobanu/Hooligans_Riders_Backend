@@ -15,7 +15,7 @@ class Events_Controller extends Controller
     public function list_events()
     {
         try {
-            if(auth()->user()->is_active === 0){
+            if (auth()->user()->is_active === 0) {
                 throw error('usuario borrado');
             }
             $events = events_routes::get(['*']);
@@ -38,17 +38,17 @@ class Events_Controller extends Controller
             );
         }
     }
-    
+
     public function new_event(Request $request)
     {
         try {
-            if(auth()->user()->is_active === 0){
+            if (auth()->user()->is_active === 0) {
                 throw error('usuario borrado');
             }
-            
+
             // validar
             $validator = $this->validate_event($request);
-            
+
             if ($validator->fails()) {
                 return response()->json(
                     [
@@ -87,7 +87,6 @@ class Events_Controller extends Controller
                 ],
                 Response::HTTP_OK
             );
-
         } catch (\Throwable $th) {
             return response()->json(
                 [
@@ -108,5 +107,66 @@ class Events_Controller extends Controller
             'maps' => 'required|min:1|max:12',
         ]);
         return $validator;
+    }
+
+    public function add_participant(Request $request, $id_event)
+    {
+        try {
+            if (auth()->user()->is_active === 0) {
+                throw error('usuario borrado');
+            }
+            $event = events_routes::findOrFail($id_event);
+            $event->participants = $event->participants+1;
+            $event->save();
+
+            // devolver respuesta
+            return response()->json(
+                [
+                    'success' => true,
+                    'message' => 'User registered successfully',
+                    'data' => $event
+                ],
+                Response::HTTP_OK
+            );
+        } catch (\Throwable $th) {
+            return response()->json(
+                [
+                    'succes' => false,
+                    'message' => 'Error marking user as inactive',
+                    'error' => $th->getMessage()
+                ],
+                Response::HTTP_INTERNAL_SERVER_ERROR
+            );
+        }
+    }
+    public function remove_participant(Request $request, $id_event)
+    {
+        try {
+            if (auth()->user()->is_active === 0) {
+                throw error('usuario borrado');
+            }
+            $event = events_routes::findOrFail($id_event);
+            $event->participants = $event->participants-1;
+            $event->save();
+
+            // devolver respuesta
+            return response()->json(
+                [
+                    'success' => true,
+                    'message' => 'User registered successfully',
+                    'data' => $event
+                ],
+                Response::HTTP_OK
+            );
+        } catch (\Throwable $th) {
+            return response()->json(
+                [
+                    'succes' => false,
+                    'message' => 'Error marking user as inactive',
+                    'error' => $th->getMessage()
+                ],
+                Response::HTTP_INTERNAL_SERVER_ERROR
+            );
+        }
     }
 }

@@ -21,4 +21,6 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/events', [Events_Controller::class, 'list_events']);
     Route::post('/events', [Events_Controller::class, 'new_event'])->middleware('isNotUser');
+    Route::patch('/add_participant/{id}', [Events_Controller::class, 'add_participant']);
+    Route::patch('/remove_participant/{id}', [Events_Controller::class, 'remove_participant']);
 });
