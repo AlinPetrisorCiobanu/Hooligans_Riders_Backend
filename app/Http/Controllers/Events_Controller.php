@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\events_routes;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Support\Facades\Validator;
+use Carbon\Carbon;
 
 use function Laravel\Prompts\error;
 
@@ -43,15 +45,49 @@ class Events_Controller extends Controller
             if(auth()->user()->is_active === 0){
                 throw error('usuario borrado');
             }
-            $events = events_routes::get(['*']);
+            
+            // validar
+            $validator = $this->validate_event($request);
+            
+            if ($validator->fails()) {
+                return response()->json(
+                    [
+                        'success' => false,
+                        'message' => 'User not registered',
+                        'error' => $validator->errors()
+                    ],
+                    Response::HTTP_BAD_REQUEST
+                );
+            }
+
+            // recoger info
+            $date = Carbon::parse($request->input('date'))->toDateString();
+            $kms = $request->input('kms');
+            $img = $request->input('img');
+            $maps = $request->input('maps');
+
+            // guardarla
+            $new_event = events_routes::create(
+                [
+                    'id_user' => auth()->user()->id,
+                    'date' => $date,
+                    'kms' => $kms,
+                    'img' => $img,
+                    'maps' => $maps,
+                    'participants' => 1
+                ]
+            );
+
+            // devolver respuesta
             return response()->json(
                 [
-                    'succes' => true,
-                    'message' => 'usuarios',
-                    'data' => $events
+                    'success' => true,
+                    'message' => 'User registered successfully',
+                    'data' => $new_event
                 ],
                 Response::HTTP_OK
             );
+
         } catch (\Throwable $th) {
             return response()->json(
                 [
@@ -62,5 +98,15 @@ class Events_Controller extends Controller
                 Response::HTTP_INTERNAL_SERVER_ERROR
             );
         }
+    }
+    public function validate_event(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'date' => 'required|min:3|max:20',
+            'kms' => 'required|min:2|max:5',
+            'img' => 'required|min:1|max:250',
+            'maps' => 'required|min:1|max:12',
+        ]);
+        return $validator;
     }
 }

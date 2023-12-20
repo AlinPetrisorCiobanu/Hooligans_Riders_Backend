@@ -16,7 +16,7 @@ class AuthController extends Controller
         try {
             // validar
             $validator = $this->validateRegisterDataUser($request);
-
+            
             if ($validator->fails()) {
                 return response()->json(
                     [

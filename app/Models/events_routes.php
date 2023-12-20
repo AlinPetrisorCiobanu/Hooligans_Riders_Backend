@@ -11,7 +11,7 @@ class events_routes extends Model
     protected $table = 'events_routes';
     protected $fillable = [
         'id_user',
-        'data',
+        'date',
         'kms',
         'img',
         'participants',
