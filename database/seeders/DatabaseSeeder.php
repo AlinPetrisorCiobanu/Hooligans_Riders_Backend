@@ -13,7 +13,8 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // \App\Models\User::factory(10)->create();
-        \App\Models\events_routes::factory(10)->create();
+        // \App\Models\events_routes::factory(10)->create();
+        // \App\Models\user_events::factory(50)->create();
 
         // \App\Models\User::factory()->create([
         //     'name' => 'rider',
