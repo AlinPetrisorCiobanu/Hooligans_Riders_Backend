@@ -18,17 +18,31 @@ class Users_Controller extends Controller
             if(auth()->user()->is_active === 0){
                 throw error('usuario borrado');
             }
-            $id_user = auth()->user()->id;
-            $user = User::find($id_user);
-
-            return response()->json(
-                [
-                    'succes' => true,
-                    'message' => 'usuarios',
-                    'data' => $user
-                ],
-                Response::HTTP_OK
-            );
+            if(auth()->user()->role==="user"){
+                $id_user = auth()->user()->id;
+                $user = User::find($id_user);
+    
+                return response()->json(
+                    [
+                        'succes' => true,
+                        'message' => 'usuarios',
+                        'data' => $user
+                    ],
+                    Response::HTTP_OK
+                );
+            }else{
+                $id_user = auth()->user()->id;
+                $user = User::get(['*']);
+    
+                return response()->json(
+                    [
+                        'succes' => true,
+                        'message' => 'usuarios',
+                        'data' => $user
+                    ],
+                    Response::HTTP_OK
+                );
+            }
         } catch (\Throwable $th) {
             return response()->json(
                 [

@@ -17,7 +17,7 @@ class Events_routesFactory extends Factory
     public function definition(): array
     {
         return [
-            'id_user' => rand(1,13),
+            'id_user' => rand(1,10),
             'date'=>fake()->date(),
             'kms'=>rand(100,400),
             'img'=>fake()->url(),

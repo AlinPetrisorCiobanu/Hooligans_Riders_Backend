@@ -18,7 +18,7 @@ class Events_Controller extends Controller
             if (auth()->user()->is_active === 0) {
                 throw error('usuario borrado');
             }
-            $events = events_routes::get(['*']);
+            $events = events_routes::with('usersData')->get();
             return response()->json(
                 [
                     'succes' => true,
@@ -77,7 +77,7 @@ class Events_Controller extends Controller
                     'participants' => 1
                 ]
             );
-
+            $new_event->usersData()->attach(auth()->user()->id);
             // devolver respuesta
             return response()->json(
                 [
@@ -112,22 +112,25 @@ class Events_Controller extends Controller
     public function add_participant(Request $request, $id_event)
     {
         try {
-            if (auth()->user()->is_active === 0) {
+            $user = auth()->user();
+            if ($user->is_active === 0) {
                 throw error('usuario borrado');
-            }
-            $event = events_routes::findOrFail($id_event);
-            $event->participants = $event->participants+1;
-            $event->save();
+            } else {
 
-            // devolver respuesta
-            return response()->json(
-                [
-                    'success' => true,
-                    'message' => 'User registered successfully',
-                    'data' => $event
-                ],
-                Response::HTTP_OK
-            );
+                $event = events_routes::findOrFail($id_event);
+                $event->participants = $event->participants + 1;
+                $event->save();
+
+                // devolver respuesta
+                return response()->json(
+                    [
+                        'success' => true,
+                        'message' => 'User registered successfully',
+                        'data' => $event
+                    ],
+                    Response::HTTP_OK
+                );
+            }
         } catch (\Throwable $th) {
             return response()->json(
                 [
@@ -142,11 +145,12 @@ class Events_Controller extends Controller
     public function remove_participant(Request $request, $id_event)
     {
         try {
-            if (auth()->user()->is_active === 0) {
+            $user = auth()->user();
+            if ($user->is_active === 0) {
                 throw error('usuario borrado');
             }
             $event = events_routes::findOrFail($id_event);
-            $event->participants = $event->participants-1;
+            $event->participants = $event->participants - 1;
             $event->save();
 
             // devolver respuesta

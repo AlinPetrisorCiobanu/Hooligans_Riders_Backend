@@ -18,8 +18,7 @@ return new class extends Migration
             $table->timestamp('date')->nullable()->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->integer('kms');
             $table->string('img')->require();
-            // $table->string('participants')->unique();
-            $table->string('participants');
+            $table->string('participants')->default(0);
             $table->string('maps')->require();
             $table->boolean('is_active')->default(true);
             $table->timestamp("created_at")->useCurrent();

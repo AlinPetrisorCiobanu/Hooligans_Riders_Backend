@@ -49,7 +49,8 @@ class AuthController extends Controller
                     'phone' => $phone,
                     'email' => $email,
                     'nickname' => $nickname,
-                    'password' => $encryptedPassword
+                    'password' => $encryptedPassword,
+                    'role' => 'user',
                 ]
             );
 
