@@ -18,10 +18,9 @@ class Users_Controller extends Controller
             if(auth()->user()->is_active === 0){
                 throw error('usuario borrado');
             }
-            if(auth()->user()->role==="user"){
+            if(auth()->user()->role==="rider"){
                 $id_user = auth()->user()->id;
                 $user = User::find($id_user);
-    
                 return response()->json(
                     [
                         'succes' => true,
@@ -43,6 +42,35 @@ class Users_Controller extends Controller
                     Response::HTTP_OK
                 );
             }
+        } catch (\Throwable $th) {
+            return response()->json(
+                [
+                    'succes' => false,
+                    'message' => 'Error marking user as inactive',
+                    'error' => $th->getMessage()
+                ],
+                Response::HTTP_INTERNAL_SERVER_ERROR
+            );
+        }
+    }
+    
+    public function user_data()
+    {
+        try {
+            if(auth()->user()->is_active === 0){
+                throw error('usuario borrado');
+            }
+                $id_user = auth()->user()->id;
+                $user = User::find($id_user);
+    
+                return response()->json(
+                    [
+                        'succes' => true,
+                        'message' => 'usuarios',
+                        'data' => $user
+                    ],
+                    Response::HTTP_OK
+                );
         } catch (\Throwable $th) {
             return response()->json(
                 [
