@@ -12,13 +12,13 @@ use function Laravel\Prompts\error;
 
 class Users_Controller extends Controller
 {
-    public function list_users()
+    public function list_users(Request $request)
     {
         try {
             if(auth()->user()->is_active === 0){
                 throw error('usuario borrado');
             }
-            if(auth()->user()->role==="rider"){
+            if(auth()->user()->role === "rider"){
                 $id_user = auth()->user()->id;
                 $user = User::find($id_user);
                 return response()->json(
@@ -31,7 +31,8 @@ class Users_Controller extends Controller
                 );
             }else{
                 $id_user = auth()->user()->id;
-                $user = User::get(['*']);
+                $page_count = $request->query('count', 5);
+                $user = User::paginate($page_count);
     
                 return response()->json(
                     [
