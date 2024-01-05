@@ -19,8 +19,7 @@ class Events_Controller extends Controller
                 throw error('usuario borrado');
             }
             $page_count = $request->query('count', 1);
-            // $events = events_routes::with('usersData')->get();
-            $events = events_routes::paginate($page_count);
+            $events = events_routes::with('usersData')->paginate($page_count);
             return response()->json(
                 [
                     'succes' => true,
