@@ -12,13 +12,15 @@ use function Laravel\Prompts\error;
 
 class Events_Controller extends Controller
 {
-    public function list_events()
+    public function list_events(Request $request)
     {
         try {
             if (auth()->user()->is_active === 0) {
                 throw error('usuario borrado');
             }
-            $events = events_routes::with('usersData')->get();
+            $page_count = $request->query('count', 1);
+            // $events = events_routes::with('usersData')->get();
+            $events = events_routes::paginate($page_count);
             return response()->json(
                 [
                     'succes' => true,
