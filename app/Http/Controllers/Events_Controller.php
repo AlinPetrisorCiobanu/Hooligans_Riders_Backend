@@ -19,7 +19,8 @@ class Events_Controller extends Controller
                 throw error('usuario borrado');
             }
             $page_count = $request->query('count', 1);
-            $events = events_routes::with('usersData')->paginate($page_count);
+            $today = Carbon::now()->toDateString();
+            $events = events_routes::with('usersData')->whereDate('date','>=',$today)->paginate($page_count);
             return response()->json(
                 [
                     'succes' => true,
