@@ -31,4 +31,5 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/message', [Messages_Controller::class, 'list_messages'])->middleware('isNotUser');
     Route::post('/message', [Messages_Controller::class, 'new_message']);
+    Route::delete('/message/{id}', [Messages_Controller::class, 'delete_message'])->middleware('isNotUser');
 });

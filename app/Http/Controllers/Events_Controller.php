@@ -55,7 +55,7 @@ class Events_Controller extends Controller
                 return response()->json(
                     [
                         'success' => false,
-                        'message' => 'User not registered',
+                        'message' => 'missed data',
                         'error' => $validator->errors()
                     ],
                     Response::HTTP_BAD_REQUEST
