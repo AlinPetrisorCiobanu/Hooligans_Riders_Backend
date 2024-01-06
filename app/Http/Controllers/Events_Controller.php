@@ -84,7 +84,7 @@ class Events_Controller extends Controller
             return response()->json(
                 [
                     'success' => true,
-                    'message' => 'User registered successfully',
+                    'message' => 'Event registered successfully',
                     'data' => $new_event
                 ],
                 Response::HTTP_OK
@@ -105,8 +105,8 @@ class Events_Controller extends Controller
         $validator = Validator::make($request->all(), [
             'date' => 'required|min:3|max:20',
             'kms' => 'required|min:2|max:5',
-            'img' => 'required|min:1|max:250',
-            'maps' => 'required|min:1|max:12',
+            'img' => 'required|min:1',
+            'maps' => 'required|min:1',
         ]);
         return $validator;
     }

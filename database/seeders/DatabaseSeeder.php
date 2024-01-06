@@ -14,6 +14,7 @@ class DatabaseSeeder extends Seeder
     {
         \App\Models\User::factory(10)->create();
         \App\Models\events_routes::factory(10)->create();
+        \App\Models\messages::factory(10)->create();
 
         \App\Models\User::factory()->create([
             'name' => 'rider',

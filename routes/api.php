@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Events_Controller;
+use App\Http\Controllers\Messages_Controller;
 use App\Http\Controllers\Users_Controller;
 use Illuminate\Support\Facades\Route;
 
@@ -24,4 +25,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/events', [Events_Controller::class, 'new_event'])->middleware('isNotUser');
     Route::patch('/add_participant/{id}', [Events_Controller::class, 'add_participant']);
     Route::patch('/remove_participant/{id}', [Events_Controller::class, 'remove_participant']);
+});
+
+//Messages
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/message', [Messages_Controller::class, 'list_messages'])->middleware('isNotUser');
+    Route::post('/message', [Messages_Controller::class, 'new_message']);
 });
