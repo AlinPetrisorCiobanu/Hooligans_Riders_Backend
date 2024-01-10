@@ -11,6 +11,17 @@ use Symfony\Component\HttpFoundation\Response;
 
 class AuthController extends Controller
 {
+    public function healthcheck(){
+        return response()->json(
+            [
+                'success' => true,
+                'message' => 'OK',
+                'data' => 'todo perfecto'
+            ],
+            Response::HTTP_OK
+        );
+    }
+
     public function register(Request $request)
     {
         try {

@@ -7,6 +7,7 @@ use App\Http\Controllers\Users_Controller;
 use Illuminate\Support\Facades\Route;
 
 // AUTH
+Route::get('/', [AuthController::class, 'healthcheck']);
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
