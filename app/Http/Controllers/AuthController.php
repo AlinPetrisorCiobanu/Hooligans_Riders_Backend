@@ -119,7 +119,6 @@ class AuthController extends Controller
                     Response::HTTP_BAD_REQUEST
                 );
             }
-
             // recoger info
             $email = $request->input('email');
             $nickname = $request->input('nickname');

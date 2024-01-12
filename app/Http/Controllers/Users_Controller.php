@@ -55,34 +55,45 @@ class Users_Controller extends Controller
         }
     }
     
-    public function user_data()
-    {
-        try {
-            if(auth()->user()->is_active === 0){
-                throw error('usuario borrado');
+    public function user_data($id = null)
+{
+    try {
+        if ($id !== null) {
+            $admin = auth()->user()->role;
+            if($admin !== "user" || $admin !== "rider"){
+                $user = User::find($id);
+                if (!$user) {
+                    throw new \Exception('Usuario no encontrado');
+                }
+            }else{
+                throw new \Exception('UNHAUTORIZATION');
             }
-                $id_user = auth()->user()->id;
-                $user = User::find($id_user);
-    
-                return response()->json(
-                    [
-                        'succes' => true,
-                        'message' => 'usuarios',
-                        'data' => $user
-                    ],
-                    Response::HTTP_OK
-                );
-        } catch (\Throwable $th) {
-            return response()->json(
-                [
-                    'succes' => false,
-                    'message' => 'Error marking user as inactive',
-                    'error' => $th->getMessage()
-                ],
-                Response::HTTP_INTERNAL_SERVER_ERROR
-            );
+        } else {
+            $user = auth()->user();
+
+            if ($user->is_active === 0) {
+                throw new \Exception('Usuario borrado');
+            }
         }
+        return response()->json(
+            [
+                'success' => true,
+                'message' => 'Datos del usuario',
+                'data' => $user
+            ],
+            Response::HTTP_OK
+        );
+    } catch (\Throwable $th) {
+        return response()->json(
+            [
+                'success' => false,
+                'message' => 'Error al obtener los datos del usuario',
+                'error' => $th->getMessage()
+            ],
+            Response::HTTP_INTERNAL_SERVER_ERROR
+        );
     }
+}
 
     public function update_user(Request $request)
     {

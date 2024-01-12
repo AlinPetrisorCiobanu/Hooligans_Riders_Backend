@@ -1,12 +1,9 @@
 {
-  "version": 2,
-  "rewrites": [
-    { "source": "/api/(.*)", "destination": "/backend/api/index.php" },
-    { "source": "/app/(.*)", "destination": "/frontend/public/$1" }
-  ],
-  "builds": [
-    { "src": "/backend/api/**/*.php", "use": "vercel/php", "config": { "buildCommand": "./vercel-build.sh" } },
-    { "src": "/frontend/public/**", "use": "@vercel/static" }
-  ]
+  "functions":{
+    "api/index.php":{
+
+    "runtime":"vercel-php@0.6.0"
+    }
+  }
 }
   
