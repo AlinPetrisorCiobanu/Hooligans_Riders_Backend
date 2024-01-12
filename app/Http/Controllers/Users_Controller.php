@@ -95,14 +95,19 @@ class Users_Controller extends Controller
     }
 }
 
-    public function update_user(Request $request)
+    public function update_user(Request $request , $id = null)
     {
         try {
             if(auth()->user()->is_active === 0){
                 throw error('usuario borrado');
             }
             // Obtener el usuario autenticado
+            $admin = auth()->user()->role;
+            if($admin !== "user" || $admin !== "rider"){
+            $id_user = $id ?? auth()->user()->id;
+            }else{
             $id_user = auth()->user()->id;
+            }
             // Actualizar el usuario solo si se proporciona al menos un campo
             if ((!$request->has('name') && !$request->has('last_name')) && (!$request->has('date') && !$request->has('phone') && !$request->has('nickname')) && !$request->has('password')) {
                 return response()->json(
