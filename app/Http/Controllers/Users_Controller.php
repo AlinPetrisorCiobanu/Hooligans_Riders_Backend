@@ -15,10 +15,10 @@ class Users_Controller extends Controller
     public function list_users(Request $request)
     {
         try {
-            if(auth()->user()->is_active === 0){
+            if (auth()->user()->is_active === 0) {
                 throw error('usuario borrado');
             }
-            if(auth()->user()->role === "rider"){
+            if (auth()->user()->role === "rider") {
                 $id_user = auth()->user()->id;
                 $user = User::find($id_user);
                 return response()->json(
@@ -29,11 +29,11 @@ class Users_Controller extends Controller
                     ],
                     Response::HTTP_OK
                 );
-            }else{
+            } else {
                 $id_user = auth()->user()->id;
                 $page_count = $request->query('count', 5);
                 $user = User::paginate($page_count);
-    
+
                 return response()->json(
                     [
                         'succes' => true,
@@ -54,59 +54,59 @@ class Users_Controller extends Controller
             );
         }
     }
-    
+
     public function user_data($id = null)
-{
-    try {
-        if ($id !== null) {
-            $admin = auth()->user()->role;
-            if($admin !== "user" || $admin !== "rider"){
-                $user = User::find($id);
-                if (!$user) {
-                    throw new \Exception('Usuario no encontrado');
-                }
-            }else{
-                throw new \Exception('UNHAUTORIZATION');
-            }
-        } else {
-            $user = auth()->user();
-
-            if ($user->is_active === 0) {
-                throw new \Exception('Usuario borrado');
-            }
-        }
-        return response()->json(
-            [
-                'success' => true,
-                'message' => 'Datos del usuario',
-                'data' => $user
-            ],
-            Response::HTTP_OK
-        );
-    } catch (\Throwable $th) {
-        return response()->json(
-            [
-                'success' => false,
-                'message' => 'Error al obtener los datos del usuario',
-                'error' => $th->getMessage()
-            ],
-            Response::HTTP_INTERNAL_SERVER_ERROR
-        );
-    }
-}
-
-    public function update_user(Request $request , $id = null)
     {
         try {
-            if(auth()->user()->is_active === 0){
+            if ($id !== null) {
+                $admin = auth()->user()->role;
+                if ($admin !== "user" || $admin !== "rider") {
+                    $user = User::find($id);
+                    if (!$user) {
+                        throw new \Exception('Usuario no encontrado');
+                    }
+                } else {
+                    throw new \Exception('UNHAUTORIZATION');
+                }
+            } else {
+                $user = auth()->user();
+
+                if ($user->is_active === 0) {
+                    throw new \Exception('Usuario borrado');
+                }
+            }
+            return response()->json(
+                [
+                    'success' => true,
+                    'message' => 'Datos del usuario',
+                    'data' => $user
+                ],
+                Response::HTTP_OK
+            );
+        } catch (\Throwable $th) {
+            return response()->json(
+                [
+                    'success' => false,
+                    'message' => 'Error al obtener los datos del usuario',
+                    'error' => $th->getMessage()
+                ],
+                Response::HTTP_INTERNAL_SERVER_ERROR
+            );
+        }
+    }
+
+    public function update_user(Request $request, $id = null)
+    {
+        try {
+            if (auth()->user()->is_active === 0) {
                 throw error('usuario borrado');
             }
             // Obtener el usuario autenticado
             $admin = auth()->user()->role;
-            if($admin !== "user" || $admin !== "rider"){
-            $id_user = $id ?? auth()->user()->id;
-            }else{
-            $id_user = auth()->user()->id;
+            if ($admin !== "user" || $admin !== "rider") {
+                $id_user = $id ?? auth()->user()->id;
+            } else {
+                $id_user = auth()->user()->id;
             }
             // Actualizar el usuario solo si se proporciona al menos un campo
             if ((!$request->has('name') && !$request->has('last_name')) && (!$request->has('date') && !$request->has('phone') && !$request->has('nickname')) && !$request->has('password')) {
@@ -136,16 +136,32 @@ class Users_Controller extends Controller
             }
 
             if ($request->has('phone')) {
-                $validatorData['phone'] = [ Rule::unique('users')->ignore($id_user)];
+                $validatorData['phone'] = [Rule::unique('users')->ignore($id_user)];
             }
 
             if ($request->has('nickname')) {
-                $validatorData['nickname'] = [ Rule::unique('users')->ignore($id_user)];
+                $validatorData['nickname'] = [Rule::unique('users')->ignore($id_user)];
             }
 
             if ($request->has('password')) {
                 $validatorData['password'] = 'sometimes|min:6|max:50';
             }
+
+            if ($admin !== "user" || $admin !== "rider") {
+                if ($request->has('role')) {
+                    $validatorData['role'] = 'sometimes|min:6|max:50';
+                }
+
+                if ($request->has('is_active')) {
+                    $validatorData['is_active'] = 'sometimes|min:6|max:50';
+                }
+
+                if ($request->has('confirmed')) {
+                    $validatorData['confirmed'] = 'sometimes|min:6|max:50';
+                }
+            }
+
+
 
             $validator = Validator::make($request->all(), $validatorData);
 
@@ -189,7 +205,21 @@ class Users_Controller extends Controller
             if ($request->has('password')) {
                 $userToUpdate->password = bcrypt($request->input('password'));
             }
-            
+
+            if ($admin !== "user" || $admin !== "rider") {
+                if ($request->has('role')) {
+                    $userToUpdate->role = $request->input('role');
+                }
+
+                if ($request->has('is_active')) {
+                    $userToUpdate->is_active = $request->input('is_active');
+                }
+
+                if ($request->has('confirmed')) {
+                    $userToUpdate->confirmed = $request->input('confirmed');
+                }
+            }
+
             // Guardar los cambios
             $userToUpdate->save();
 
@@ -216,7 +246,7 @@ class Users_Controller extends Controller
     public function delete_user()
     {
         try {
-            if(auth()->user()->is_active === 0){
+            if (auth()->user()->is_active === 0) {
                 throw error('usuario borrado');
             }
             // Obtener el usuario autenticado
@@ -230,7 +260,7 @@ class Users_Controller extends Controller
                     [
                         'success' => false,
                         'message' => 'User not found',
-                        
+
                     ],
                     Response::HTTP_NOT_FOUND
                 );
